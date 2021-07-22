@@ -1,0 +1,83 @@
+-- Correr FTP en docker
+docker run -d -v /c/Users/{:user-local-machine}/vsftpdir:/home/vsftpd -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=curso -e FTP_PASS=cursomti -e PASV_ADDRESS=192.168.99.100 --name ftp --restart=always bogem/ftp
+
+docker run -d -v /c/Users/Patarroyo/vsftpdir:/home/vsftpd -p 25:20 -p 26:21 -p 47500-47570:47400-47470 -e FTP_USER=curso -e FTP_PASS=cursomti -e PASV_ADDRESS=192.168.99.100 --name ftp --restart=always bogem/ftp
+
+-- usuario => foo, contraseña => pass
+docker run -p 22:22 -d atmoz/sftp foo:pass:::/archivos/pagares/inmovilizados/
+
+-- MARIA_DB
+docker run --name mariadb_1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pass -d mariadb:latest
+
+-- COPIAR ARCHIVOS
+docker cp {id_docker}:{path} {salida}
+
+-- guardar imagen
+docker commit {id_docker|name} {salida}
+
+-- exportar imagen
+docker save -o {salida con extension.tar} {id_doker|name}
+
+-- importar imagen
+docker load -i {ruta_tar}
+
+-- borrar imagen
+docker rmi {id_docker_image}
+
+-- listar redes
+docker network ls
+
+-- crear una red
+docker network create --driver bridge {id_docker|name}
+
+-- correr container en una red especifica
+docker run --name {name_container} -p {port_container}:{port_default} -e {enviroment_variable} --network {network_name} {container}:{version}
+
+-- eliminar network
+docker network rm {id_docker|name}
+
+-- iteraciones -a => ALL -q => ACTIVE
+docker {option docker} $(docker ps -aq)
+
+-- SQL SERVER EXPRESS
+docker run -d -e SA_PASSWORD={password} -e SQLSERVER_DATABASE={database} -e SQLSERVER_USER={username} -e SQLSERVER_PASSWORD={password_username} -p 1433:1433 exoplatform/sqlserver:2017-CU8
+docker run -d -e SA_PASSWORD=Bogota2020 -e SQLSERVER_DATABASE=deceval -e SQLSERVER_USER=usuario -e SQLSERVER_PASSWORD=curso -p 1433:1433 exoplatform/sqlserver:2017-CU8
+
+-- ORACLE
+docker run --privileged --name oracle11g -p 1521:1521 -v <install_folder>:/install -v <local_dpdump>:/opt/oracle/dpdump jaspeen/oracle-11g
+
+-- POSTGRESQL
+docker run --env-file .\env.list -p {port_expose}:5432 registry.access.redhat.com/openshift3/postgresql-92-rhel7
+
+-- LDAP
+docker run --name ldap-service -d -p 389:389 -e SLAPD_PASSWORD=passwordmti -e SLAPD_DOMAIN=CURSOMTI.NET -e SLAPD_ADDITIONAL_SCHEMAS=ppolicy -e SLAPD_ADDITIONAL_MODULES=ppolicy dinkel/openldap
+-- RUN in PHP
+docker run --name phpldapadmin-service -p 6443:443 --hostname phpldapadmin-service --link ldap-service:ldap-host --env PHPLDAPADMIN_LDAP_HOSTS=ldap-host --detach osixia/phpldapadmin:0.6.12
+-- Credential LDAP
+user: cn=admin,dc=CURSOMTI,dc=NET
+pass: passwordmti
+
+-- use file yml
+default file (docker-compose): docker-compose up -d
+especific file: docker-compose -f docker-composeV2.yml up -d
+
+-- web admin
+docker volume create portainer_data
+docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce
+--> credentials:
+	* user: admin
+	* pass: tryportainer
+--> url: localhost:9000
+
+-- set scale many dockers
+docker-compose -f docker-composeV2.yml up --scale microservice=3
+
+-- print pretty format
+docker ps -a --format=DOCKER_FORMAT="ID\t{{.ID}}\nNombre:\t{{.Names}}\nPuerto:\t{{.Ports}}\nComando:\t{{.Command}}\nEstatus:\t{{.Status}}\nCreado:\t{{.CreatedAt}}\nTamaño:\t{{.Size}}\n"
+
+-- servicio de correo
+docker run -p 80:80 -p 443:443 -h HOSTNAME.DOMAIN -e "MYSQL_ROOT_PASSWORD=password" -e "SOGO_WORKERS=1" -e "TZ=Europe/Prague" -e "POSTMASTER_PASSWORD=new_post" -e "IREDAPD_PLUGINS=['reject_null_sender', 'reject_sender_login_mismatch', 'greylisting', 'throttle', 'amavisd_wblist', 'sql_alias_access_policy']" -v /srv/iredmail/mysql:/var/lib/mysql -v /srv/iredmail/vmail:/var/vmail -v /srv/iredmail/clamav:/var/lib/clamav --name=iredmail lejmr/iredmail:mysql-latest
+
+-- servicios de almacenamiento S3
+docker run --detach --env 'RIAK_CS_BUCKETS=foo,bar,baz' --publish '9090:8080' --name 'riak-cs2' ianbytchek/riak-cs
+docker run -it -p 9001:9000 minio/minio:edge server /data

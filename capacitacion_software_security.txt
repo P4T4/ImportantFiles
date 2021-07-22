@@ -1,0 +1,19 @@
+procesos de verificacion de librerias:
+	* https://snyk.io/vuln/
+	* https://www.exploit-db.com/
+
+procesos para verificar los servidores y puertos expuestos:
+	* https://www.shodan.io/
+	* https://censys.io/
+
+procesos para validar contraseñas con riesgo y vulnerabilidades:
+	* https://haveibeenpwned.com/
+
+soluciones para ciertos riesgos:
+	* https://hackerone.com/hacktivity
+
+OWASP estandar:
+	* https://owasp.org/www-pdf-archive/Est%C3%A1ndar_de_Verificaci%C3%B3n_de_Seguridad_en_Aplicaciones_3.0.1.pdf
+
+Panel para verficacion de conexion segura:
+	* https://www.ssllabs.com/ssltest/

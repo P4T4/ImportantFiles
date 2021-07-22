@@ -1,0 +1,9 @@
+* create from file models, repositories and views link:
+https://github.com/laravel-shift/blueprint
+
+* Interface to implement a parameterizer database link:
+https://github.com/amranidev/scaffold-interface
+
+* Laravel generator (API) link:
+https://www.infyom.com/open-source
+
